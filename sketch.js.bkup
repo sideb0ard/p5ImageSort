@@ -1,0 +1,158 @@
+
+const whiteValue = 255;
+const col = 0;
+const row = 0;
+
+let img;
+let sorted;
+
+function preload() {
+	img = loadImage('CODER.png');
+	// Img = loadImage('HPLLFEB.png');
+}
+
+// Helper for writing color to array
+function writeColor(image, x, y, red, green, blue, alpha) {
+	const index = (x + y * width) * 4;
+	image.pixels[index] = red;
+	image.pixels[index + 1] = green;
+	image.pixels[index + 2] = blue;
+	image.pixels[index + 3] = alpha;
+}
+
+function setup() {
+	createCanvas(windowWidth, windowHeight);
+	img.resize(50, 50);
+	sorted = createImage(img.width, img.height, RGB);
+	sorted = img.get();
+
+	// Sorted.loadPixels();
+	// For (let i = 0; i < sorted.pixels.length; i++) {
+	// 	const record = -1;
+	// 	let selectedPixel = i;
+	// 	for (let j = i; j < sorted.pixels.length; j++) {
+	// 		const pix = sorted.pixels[j];
+	// 		const b = brightness(pix);
+	// 		if (b > record) {
+	// 			selectedPixel = j;
+	// 			record - b;
+	// 		}
+	// 	}
+
+	// 	const temporary = sorted.pixels[selectedPixel];
+	// 	sorted.pixels[selectedPixel] = sorted.pixels[i];
+	// 	sorted.pixels[i] = temporary;
+	// }
+
+	// sorted.updatePixels();
+}
+
+function draw() {
+	color(255);
+	image(sorted, 0, 0);
+ 	// Image(img, 0, 0);
+}
+
+function sortPixels() {
+	// Get a random pixel.
+	const x = random(img.width);
+	const y = random(img.height - 1);
+
+	// Get the color of the pixel.
+	const colorOne = img.get(x, y);
+
+	// Get the color of the pixel below the first one.
+	const colorTwo = img.get(x, y + 1);
+
+	// Get the total R+G+B of both colors.
+	const totalOne = red(colorOne) + green(colorOne) + blue(colorTwo);
+	const totalTwo = red(colorTwo) + green(colorTwo) + blue(colorTwo);
+
+	// If the first total is less than the second total, swap the pixels.
+	// This causes darker colors to fall to the bottom,
+	// and light pixels to rise to the top.
+	if (totalOne < totalTwo) {
+		img.set(x, y, colorTwo);
+		img.set(x, y + 1, colorOne);
+	}
+}
+
+function sortColumn() {}
+
+function blah(col_idx) {
+	const d = pixelDensity();
+	// Console.log(4 * (windowWidth * d) *  (windowHeight * d));
+	// console.log(pixels.length);
+	const startidx = 4 * col_idx;
+	const sortedpix = new Array(windowHeight * d);
+	let count = 0;
+	let insidx = 0;
+	for (let i = startidx; i < pixels.length; i += (4 * windowWidth * d)) {
+		count++;
+		// Console.log(i);
+		sortedpix[insidx++] = pixels[i];
+		//  // pixels[i] = 255;
+	}
+
+	console.log('COUNTERD', count);
+	console.log('WIDTH', windowHeight * d);
+	sortedpix.sort((a, b) => a - b);
+	console.log(sortedpix);
+	insidx = 0;
+	for (let i = startidx; i < pixels.length; i += (4 * windowWidth * d)) {
+		pixels[i] = sortedpix[insidx++];
+	}
+}
+
+// Let gy = 0;
+// function draw() {
+// 	// Background(0);
+// 	//  Img.loadPixels();
+// 	//  for (let i = 0; i < 30_000; i++) {
+// 	//  	sortPixels();
+// 	//  }
+//
+// 	//  img.updatePixels();
+//
+// 	// image(sorted, 0, 0);
+// 	// noLoop();
+// 	img.loadPixels();
+//
+let x; let y;
+// Fill with random colors
+for (y = 0; y < img.height; y++) {
+	for (x = 0; x < img.width; x++) {
+		const red = random(255);
+		const green = random(255);
+		const blue = random(255);
+		const alpha = 255;
+		writeColor(img, x, y, red, green, blue, alpha);
+	}
+}
+//
+// 	// Draw a red line
+// 	y = 0;
+// 	for (x = 0; x < img.width; x++) {
+// 		writeColor(img, x, y, 255, 0, 0, 255);
+// 	}
+//
+// 	// Draw a green line
+// 	// y = img.height - 1;
+// 	gy -= 1;
+// 	if (gy < 0) {
+// 		gy = img.height - 1;
+// 	}
+//
+// 	y = gy;
+// 	for (x = 0; x < img.width; x++) {
+// 		writeColor(img, x, y, 0, 255, 0, 255);
+// 	}
+//
+// 	img.updatePixels();
+// 	image(img, 0, 0);
+// }
+
+function windowResized() {
+	resizeCanvas(windowWidth, windowHeight);
+	// Piclient.imageData();
+}
